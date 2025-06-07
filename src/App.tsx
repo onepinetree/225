@@ -71,7 +71,7 @@ function App() {
         {
           id: '2',
           title: 'Legends Never Die',
-          youtubeUrl: 'https://music.youtube.com/watch?v=R4hDcd9fzRk&si=vc6MrfqBNSVd-pXO',
+          youtubeUrl: 'https://music.youtube.com/watch?v=R4hDcd9fzRk&si=AEJrGO14ALSzhwx0',
           climaxTime: 2 * 60 + 56
         },
         {
