@@ -458,7 +458,7 @@ function App() {
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-800">내 에너지 포인트</h2>
+              <h2 className="text-xl font-bold text-gray-800">PR치기 10초전 최고의 선택</h2>
               <button
                 onClick={() => setShowAddSong(true)}
                 className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105"
