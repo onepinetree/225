@@ -53,11 +53,11 @@ export const SongCard: React.FC<SongCardProps> = ({
   return (
     <>
       <div
-        className="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow flex items-center space-x-4 relative cursor-pointer"
+        className="bg-white rounded-xl px-3 py-3 md:p-6 shadow-sm border hover:shadow-md transition-shadow flex items-center gap-3 md:gap-4 relative cursor-pointer"
         onClick={() => onExpandSong(song.id)}
       >
         {/* 썸네일 */}
-        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+        <div className="w-14 h-14 md:w-16 md:h-16 rounded-lg overflow-hidden flex-shrink-0">
           {song.thumbnailUrl ? (
             <img
               src={song.thumbnailUrl}
@@ -77,35 +77,39 @@ export const SongCard: React.FC<SongCardProps> = ({
         
         {/* 제목 */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-800 text-lg truncate">{song.title}</h3>
+          <h3 className="font-bold text-base md:text-lg text-gray-900 break-words line-clamp-2 leading-snug">
+            {song.title}
+          </h3>
         </div>
         
         {/* 오른쪽 버튼 그룹 */}
-        <div className="flex items-center space-x-2 ml-2">
+        <div className="flex flex-col md:flex-row items-center flex-shrink-0 min-w-fit space-y-1 md:space-y-0 md:space-x-2 ml-1 md:ml-2">
           {/* 순위 변경 버튼 */}
-          <button
-            onClick={e => { e.stopPropagation(); onMoveUp(index); }}
-            className={`w-8 h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-100 transition-colors ${index === 0 ? 'opacity-30 cursor-default' : ''}`}
-            tabIndex={-1}
-            aria-label="위로"
-            disabled={index === 0}
-          >
-            <ChevronUp className="w-4 h-4 text-gray-400" />
-          </button>
-          <button
-            onClick={e => { e.stopPropagation(); onMoveDown(index); }}
-            className={`w-8 h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-100 transition-colors ${index === totalSongs - 1 ? 'opacity-30 cursor-default' : ''}`}
-            tabIndex={-1}
-            aria-label="아래로"
-            disabled={index === totalSongs - 1}
-          >
-            <ChevronDown className="w-4 h-4 text-gray-400" />
-          </button>
+          <div className="flex flex-row md:flex-col gap-1 md:gap-0">
+            <button
+              onClick={e => { e.stopPropagation(); onMoveUp(index); }}
+              className={`w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-100 transition-colors ${index === 0 ? 'opacity-30 cursor-default' : ''}`}
+              tabIndex={-1}
+              aria-label="위로"
+              disabled={index === 0}
+            >
+              <ChevronUp className="w-4 h-4 text-gray-400" />
+            </button>
+            <button
+              onClick={e => { e.stopPropagation(); onMoveDown(index); }}
+              className={`w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-100 transition-colors ${index === totalSongs - 1 ? 'opacity-30 cursor-default' : ''}`}
+              tabIndex={-1}
+              aria-label="아래로"
+              disabled={index === totalSongs - 1}
+            >
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
+          </div>
           
           {/* Play 아이콘 */}
           <button
             onClick={e => { e.stopPropagation(); onExpandSong(song.id); }}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent hover:bg-transparent focus:bg-transparent transition-none"
+            className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-transparent hover:bg-transparent focus:bg-transparent transition-none"
             tabIndex={-1}
             aria-label="재생 옵션 열기"
           >
@@ -119,7 +123,7 @@ export const SongCard: React.FC<SongCardProps> = ({
                 e.stopPropagation();
                 onExpandSong(isMoreMenuOpen ? '' : song.id + '-menu');
               }}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-transparent hover:bg-transparent focus:bg-transparent transition-none"
+              className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-transparent hover:bg-transparent focus:bg-transparent transition-none"
               tabIndex={-1}
               aria-label="더보기"
             >
