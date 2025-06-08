@@ -38,7 +38,7 @@ export const useSongs = (isLoggedIn: boolean) => {
     try {
       const newSong = await songsApi.createSong(songData);
       if (newSong) {
-        setSongs(prev => [...prev, newSong]);
+        setSongs(prev => [newSong, ...prev]);
       }
       return { success: true, message: '곡이 추가되었습니다.' };
     } catch (error: any) {

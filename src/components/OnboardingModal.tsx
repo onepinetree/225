@@ -13,27 +13,28 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ onClose }) => 
           <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <Zap className="text-white text-2xl" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">환영합니다!</h2>
-          <p className="text-gray-600">운동의 순간, 완벽한 타이밍을 경험해보세요</p>
+          <h2 className="text-2xl font-extrabold text-gray-800 mb-2 animate-bounce">Two25에 오신 걸 환영합니다!</h2>
+          <p className="text-gray-700 font-bold animate-pulse">예업 버디! 오늘도 한계 돌파 준비됐나요? 💪</p>
+          <p className="text-gray-500 font-semibold">"Yeah Buddy! Lightweight Baby!"<br/>로니콜먼처럼 끝까지 가보자!</p>
         </div>
         <div className="space-y-4 text-left mb-8">
           <div className="flex items-start space-x-3">
             <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="text-orange-600 text-sm font-bold">1</span>
             </div>
-            <p className="text-gray-700">좋아하는 노래의 클라이맥스 시간을 설정하세요</p>
+            <p className="text-gray-700 font-semibold">좋아하는 노래의 클라이맥스(폭발구간)를 설정하세요!</p>
           </div>
           <div className="flex items-start space-x-3">
             <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="text-orange-600 text-sm font-bold">2</span>
             </div>
-            <p className="text-gray-700">재생할 때 원하는 시점을 선택하세요</p>
+            <p className="text-gray-700 font-semibold">재생할 때 "PR치기 10초 전" 등 원하는 시점을 선택!</p>
           </div>
           <div className="flex items-start space-x-3">
             <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="text-orange-600 text-sm font-bold">3</span>
             </div>
-            <p className="text-gray-700">최고의 에너지 부스트를 경험하세요</p>
+            <p className="text-gray-700 font-semibold">로니콜먼처럼 최고의 에너지 부스트!<br/>PR 갱신, 오늘도 가볍게!</p>
           </div>
         </div>
         <button

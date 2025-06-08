@@ -94,11 +94,11 @@ function App() {
             <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <Zap className="text-white text-3xl" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              ClimaxBeats
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4 tracking-tight drop-shadow-lg animate-bounce">
+              Two25
             </h1>
-            <p className="text-xl text-gray-600 mb-2">절정 순간으로, 바로 점프</p>
-            <p className="text-gray-500">운동의 순간, 완벽한 타이밍</p>
+            <p className="text-xl text-gray-700 mb-2 font-bold animate-pulse">예업 버디! 오늘도 PR 갱신 가자! 💪</p>
+            <p className="text-gray-500 font-semibold">"Yeah Buddy! Lightweight Baby!"<br/>로니콜먼처럼 한계 돌파!</p>
           </div>
 
           {/* Features */}
@@ -168,7 +168,7 @@ function App() {
               <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
                 <Zap className="text-white text-sm" />
               </div>
-              <h1 className="text-xl font-bold text-gray-800">ClimaxBeats</h1>
+              <h1 className="text-xl font-extrabold text-gray-800 tracking-tight drop-shadow-lg animate-bounce">Two25</h1>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">

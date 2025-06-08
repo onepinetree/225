@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Song } from '../types';
-import { fetchYoutubeTitle } from '../api/songs';
+import { fetchYoutubeTitle, getYoutubeVideoId } from '../api/songs';
 
 interface AddSongModalProps {
   onClose: () => void;
@@ -17,39 +17,43 @@ export const AddSongModal: React.FC<AddSongModalProps> = ({ onClose, onAdd }) =>
   const [climaxMinute, setClimaxMinute] = useState(0);
   const [climaxSecond, setClimaxSecond] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [urlError, setUrlError] = useState('');
 
-  // 유튜브 제목 자동 입력
+  // 유튜브 제목 자동 입력 및 유효성 검사
   const handleUrlChange = async (url: string) => {
     setNewSong({ ...newSong, youtubeUrl: url });
-    
-    if (url.includes('youtube.com/watch?v=') || url.includes('youtu.be/')) {
-      setLoadingTitle(true);
-      try {
-        const title = await fetchYoutubeTitle(url);
-        if (title) {
-          setNewSong(prev => ({ ...prev, title }));
-        }
-      } catch (error) {
-        console.error('Failed to fetch title:', error);
-      } finally {
-        setLoadingTitle(false);
+    setUrlError('');
+    setNewSong(prev => ({ ...prev, title: '' }));
+    if (!url) return;
+    const videoId = getYoutubeVideoId(url);
+    if (!videoId) {
+      setUrlError('유효하지 않은 유튜브 링크입니다.');
+      return;
+    }
+    setLoadingTitle(true);
+    try {
+      const title = await fetchYoutubeTitle(url);
+      if (title) {
+        setNewSong(prev => ({ ...prev, title }));
+      } else {
+        setUrlError('유효하지 않은 유튜브 링크입니다.');
       }
-    } else {
-      setNewSong(prev => ({ ...prev, title: '' }));
+    } catch (error) {
+      setUrlError('유효하지 않은 유튜브 링크입니다.');
+    } finally {
+      setLoadingTitle(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    
     try {
       const climaxTime = climaxMinute * 60 + climaxSecond;
       const result = await onAdd({
         ...newSong,
         climaxTime
       });
-      
       if (result.success) {
         onClose();
         setNewSong({ title: '', youtubeUrl: '', climaxTime: 0 });
@@ -80,9 +84,9 @@ export const AddSongModal: React.FC<AddSongModalProps> = ({ onClose, onAdd }) =>
               required
               disabled={submitting}
             />
+            {urlError && <p className="text-xs text-red-500 mt-1">{urlError}</p>}
           </div>
-          
-          {newSong.title && (
+          {newSong.title && !urlError && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">노래 제목</label>
               <input
@@ -97,7 +101,6 @@ export const AddSongModal: React.FC<AddSongModalProps> = ({ onClose, onAdd }) =>
               {loadingTitle && <p className="text-xs text-gray-500 mt-1">제목을 가져오는 중...</p>}
             </div>
           )}
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">클라이맥스 시간</label>
             <div className="flex items-center space-x-2">
@@ -131,7 +134,6 @@ export const AddSongModal: React.FC<AddSongModalProps> = ({ onClose, onAdd }) =>
             </div>
             <p className="text-xs text-gray-500 mt-1">예: 2분 30초</p>
           </div>
-          
           <div className="flex space-x-3 mt-6">
             <button
               type="button"
@@ -144,7 +146,7 @@ export const AddSongModal: React.FC<AddSongModalProps> = ({ onClose, onAdd }) =>
             <button
               type="submit"
               className="flex-1 py-3 px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 disabled:opacity-50"
-              disabled={submitting || !newSong.title}
+              disabled={submitting || !newSong.title || !!urlError}
             >
               {submitting ? '추가중...' : '추가하기'}
             </button>

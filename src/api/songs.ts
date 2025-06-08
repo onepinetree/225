@@ -35,7 +35,7 @@ export const getSongs = async (): Promise<Song[]> => {
   const { data, error } = await supabase
     .from('songs')
     .select('*')
-    .order('order_index', { ascending: true });
+    .order('order_index', { ascending: false });
   
   if (error) {
     console.error('Error fetching songs:', error);

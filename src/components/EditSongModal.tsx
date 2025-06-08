@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Song } from '../types';
-import { fetchYoutubeTitle } from '../api/songs';
+import { fetchYoutubeTitle, getYoutubeVideoId } from '../api/songs';
 
 interface EditSongModalProps {
   song: Song;
@@ -15,30 +15,37 @@ export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onS
   const [climaxSecond, setClimaxSecond] = useState(song.climaxTime % 60);
   const [loadingTitle, setLoadingTitle] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [urlError, setUrlError] = useState('');
 
-  // 유튜브 제목 자동 입력
+  // 유튜브 제목 자동 입력 및 유효성 검사
   const handleUrlChange = async (url: string) => {
     setYoutubeUrl(url);
-    
-    if (url.includes('youtube.com/watch?v=') || url.includes('youtu.be/')) {
-      setLoadingTitle(true);
-      try {
-        const fetchedTitle = await fetchYoutubeTitle(url);
-        if (fetchedTitle) {
-          setTitle(fetchedTitle);
-        }
-      } catch (error) {
-        console.error('Failed to fetch title:', error);
-      } finally {
-        setLoadingTitle(false);
+    setUrlError('');
+    setTitle('');
+    if (!url) return;
+    const videoId = getYoutubeVideoId(url);
+    if (!videoId) {
+      setUrlError('유효하지 않은 유튜브 링크입니다.');
+      return;
+    }
+    setLoadingTitle(true);
+    try {
+      const fetchedTitle = await fetchYoutubeTitle(url);
+      if (fetchedTitle) {
+        setTitle(fetchedTitle);
+      } else {
+        setUrlError('유효하지 않은 유튜브 링크입니다.');
       }
+    } catch (error) {
+      setUrlError('유효하지 않은 유튜브 링크입니다.');
+    } finally {
+      setLoadingTitle(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    
     try {
       const climaxTime = climaxMinute * 60 + climaxSecond;
       const result = await onSave(song.id, {
@@ -46,7 +53,6 @@ export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onS
         youtubeUrl,
         climaxTime
       });
-      
       if (result.success) {
         onClose();
       }
@@ -74,8 +80,8 @@ export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onS
               required
               disabled={submitting}
             />
+            {urlError && <p className="text-xs text-red-500 mt-1">{urlError}</p>}
           </div>
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">노래 제목</label>
             <input
@@ -89,7 +95,6 @@ export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onS
             />
             {loadingTitle && <p className="text-xs text-gray-500 mt-1">제목을 가져오는 중...</p>}
           </div>
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">클라이맥스 시간</label>
             <div className="flex items-center space-x-2">
@@ -123,7 +128,6 @@ export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onS
             </div>
             <p className="text-xs text-gray-500 mt-1">예: 2분 30초</p>
           </div>
-          
           <div className="flex space-x-3 mt-6">
             <button
               type="button"
@@ -136,7 +140,7 @@ export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onS
             <button
               type="submit"
               className="flex-1 py-3 px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 disabled:opacity-50"
-              disabled={submitting}
+              disabled={submitting || !title || !!urlError}
             >
               {submitting ? '저장중...' : '저장'}
             </button>
