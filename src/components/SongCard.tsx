@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Play, MoreVertical, ChevronUp, ChevronDown, ExternalLink, Music } from 'lucide-react';
 import { Song, PlayOption } from '../types';
 import { PLAY_OPTIONS } from '../constants';
-import { ConfirmDialog } from './ConfirmDialog';
 
 interface SongCardProps {
   song: Song;
@@ -29,7 +28,6 @@ export const SongCard: React.FC<SongCardProps> = ({
   onMoveUp,
   onMoveDown
 }) => {
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isPlayMenuOpen = expandedSong === song.id;
   const isMoreMenuOpen = expandedSong === song.id + '-menu';
 
@@ -137,7 +135,9 @@ export const SongCard: React.FC<SongCardProps> = ({
               <button
                 onClick={e => { 
                   e.stopPropagation(); 
-                  setShowDeleteConfirm(true);
+                  if (window.confirm('정말 삭제할까요?')) {
+                    onDelete(song.id);
+                  }
                   onExpandSong('');
                 }}
                 className="w-full text-left px-4 py-2 hover:bg-red-50 text-red-500"
@@ -167,22 +167,6 @@ export const SongCard: React.FC<SongCardProps> = ({
           ))}
         </div>
       )}
-
-      {/* 삭제 확인 다이얼로그 */}
-      <ConfirmDialog
-        isOpen={showDeleteConfirm}
-        title="에너지 포인트 삭제"
-        message={`"${song.title}"을(를) 정말 삭제할까요?\n삭제하면 되돌릴 수 없습니다.`}
-        emoji="🗑️"
-        confirmText="삭제하기"
-        cancelText="취소"
-        type="danger"
-        onConfirm={() => {
-          onDelete(song.id);
-          setShowDeleteConfirm(false);
-        }}
-        onCancel={() => setShowDeleteConfirm(false)}
-      />
     </div>
   );
 }; 

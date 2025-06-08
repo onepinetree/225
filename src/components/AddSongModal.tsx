@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Song } from '../types';
 import { fetchYoutubeTitle } from '../api/songs';
-import { useToast } from '../hooks/useToast';
 
 interface AddSongModalProps {
   onClose: () => void;
@@ -9,7 +8,6 @@ interface AddSongModalProps {
 }
 
 export const AddSongModal: React.FC<AddSongModalProps> = ({ onClose, onAdd }) => {
-  const toast = useToast();
   const [newSong, setNewSong] = useState({
     title: '',
     youtubeUrl: '',
@@ -57,12 +55,10 @@ export const AddSongModal: React.FC<AddSongModalProps> = ({ onClose, onAdd }) =>
         setNewSong({ title: '', youtubeUrl: '', climaxTime: 0 });
         setClimaxMinute(0);
         setClimaxSecond(0);
-        toast.success('새 에너지 포인트 추가!', '완벽한 클라이맥스를 찾았네요 🎯');
-      } else {
-        toast.error('곡 추가 실패', result.message);
       }
+      // 실패해도 조용히 처리
     } catch (error) {
-      toast.error('오류 발생', '곡 추가 중 문제가 발생했습니다 😅');
+      // 오류 발생해도 조용히 처리
     } finally {
       setSubmitting(false);
     }

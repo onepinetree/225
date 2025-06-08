@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import { Plus, Zap, Music, Clock, User, LogOut } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';
 import { useSongs } from './hooks/useSongs';
-import { useToast } from './hooks/useToast';
 import { LoginForm } from './components/LoginForm';
 import { SongCard } from './components/SongCard';
 import { AddSongModal } from './components/AddSongModal';
 import { EditSongModal } from './components/EditSongModal';
 import { OnboardingModal } from './components/OnboardingModal';
-import { ToastContainer } from './components/Toast';
 import { Song, PlayOption } from './types';
 
 function App() {
   const auth = useAuth();
   const songs = useSongs(auth.isLoggedIn);
-  const toast = useToast();
   
   // UI 상태
   const [showAddSong, setShowAddSong] = useState(false);
@@ -25,25 +22,14 @@ function App() {
   // 로그인 관련 핸들러
   const handleEmailSubmit = async (email: string, password: string, isSignUp: boolean) => {
     const result = isSignUp ? await auth.signUp(email, password) : await auth.signIn(email, password);
-    if (result.success) {
-      if (isSignUp) {
-        toast.success('회원가입 완료!', '이메일 인증을 확인해주세요 ✉️');
-      } else {
-        setShowOnboarding(true);
-        toast.energy('환영합니다!', '에너지 포인트로 운동을 시작해보세요 🏃‍♂️');
-      }
-    } else {
-      toast.error('로그인 실패', result.message);
+    if (result.success && !isSignUp) {
+      setShowOnboarding(true);
     }
   };
 
   const handleKakaoLogin = async () => {
     const result = await auth.signInWithKakao();
-    if (result.success) {
-      toast.energy('카카오 로그인 성공!', '에너지 충전 완료 ⚡');
-    } else {
-      toast.error('카카오 로그인 실패', result.message);
-    }
+    // 조용히 처리
   };
 
   const handleGuestLogin = () => {
@@ -66,11 +52,7 @@ function App() {
 
   const handleAddDefaultSongs = async () => {
     const result = await songs.addDefaultSongs();
-    if (result.success) {
-      toast.energy('기본곡 추가 완료!', 'ARMY, Legends Never Die 등 4곡이 추가되었어요 🎵');
-    } else {
-      toast.error('기본곡 추가 실패', result.message);
-    }
+    // 조용히 처리 - UI 변화로 피드백 제공
   };
 
   const handleEditSong = async (id: string, updates: Partial<Song>) => {
@@ -83,11 +65,7 @@ function App() {
 
   const handleDeleteSong = async (id: string) => {
     const result = await songs.deleteSong(id);
-    if (result.success) {
-      toast.success('곡 삭제 완료', '에너지 포인트가 삭제되었습니다 🗑️');
-    } else {
-      toast.error('삭제 실패', result.message);
-    }
+    // 조용히 처리 - 삭제되면 UI에서 자동으로 사라짐
   };
 
   // 로딩 중이면 로딩 화면
@@ -321,9 +299,6 @@ function App() {
           onClick={() => setExpandedSong(null)}
         />
       )}
-
-      {/* Toast Notifications */}
-      <ToastContainer toasts={toast.toasts} onClose={toast.removeToast} />
     </div>
   );
 }

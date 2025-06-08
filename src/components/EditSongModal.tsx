@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Song } from '../types';
 import { fetchYoutubeTitle } from '../api/songs';
-import { useToast } from '../hooks/useToast';
 
 interface EditSongModalProps {
   song: Song;
@@ -10,7 +9,6 @@ interface EditSongModalProps {
 }
 
 export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onSave }) => {
-  const toast = useToast();
   const [title, setTitle] = useState(song.title);
   const [youtubeUrl, setYoutubeUrl] = useState(song.youtubeUrl);
   const [climaxMinute, setClimaxMinute] = useState(Math.floor(song.climaxTime / 60));
@@ -51,12 +49,10 @@ export const EditSongModal: React.FC<EditSongModalProps> = ({ song, onClose, onS
       
       if (result.success) {
         onClose();
-        toast.success('에너지 포인트 수정 완료!', '클라이맥스가 업데이트되었습니다 ✨');
-      } else {
-        toast.error('수정 실패', result.message);
       }
+      // 실패해도 조용히 처리
     } catch (error) {
-      toast.error('오류 발생', '곡 수정 중 문제가 발생했습니다 😅');
+      // 오류 발생해도 조용히 처리
     } finally {
       setSubmitting(false);
     }
