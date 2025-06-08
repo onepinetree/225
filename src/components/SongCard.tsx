@@ -3,6 +3,7 @@ import { Play, MoreVertical, ChevronUp, ChevronDown, ExternalLink, Music } from 
 import { Song, PlayOption } from '../types';
 import { PLAY_OPTIONS } from '../constants';
 import { ConfirmDialog } from './ConfirmDialog';
+import { getYoutubeVideoId } from '../api/songs';
 
 interface SongCardProps {
   song: Song;
@@ -34,8 +35,8 @@ export const SongCard: React.FC<SongCardProps> = ({
   const isMoreMenuOpen = expandedSong === song.id + '-menu';
 
   const generatePlayUrl = (song: Song, option: PlayOption) => {
-    const videoId = song.youtubeUrl.split('v=')[1]?.split('&')[0];
-    
+    const videoId = getYoutubeVideoId(song.youtubeUrl);
+    if (!videoId) return '';
     if (option.secondsBefore === -1) {
       return `https://youtube.com/watch?v=${videoId}`;
     } else {
@@ -66,7 +67,7 @@ export const SongCard: React.FC<SongCardProps> = ({
             />
           ) : song.youtubeUrl ? (
             <img
-              src={`https://img.youtube.com/vi/${song.youtubeUrl.split('v=')[1]?.split('&')[0]}/0.jpg`}
+              src={`https://img.youtube.com/vi/${getYoutubeVideoId(song.youtubeUrl)}/0.jpg`}
               alt={song.title}
               className="w-full h-full object-cover"
             />

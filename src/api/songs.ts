@@ -195,4 +195,23 @@ export const addDefaultSongsForNewUser = async (): Promise<Song[]> => {
   }
   
   return createdSongs;
-}; 
+};
+
+// 유튜브 URL에서 videoId 추출 (youtube.com, music.youtube.com, youtu.be 등 지원)
+export function getYoutubeVideoId(url: string): string | null {
+  try {
+    // 1. youtube.com/watch?v=...
+    const match1 = url.match(/[?&]v=([\w-]{11})/);
+    if (match1) return match1[1];
+    // 2. youtu.be/...
+    const match2 = url.match(/youtu\.be\/([\w-]{11})/);
+    if (match2) return match2[1];
+    // 3. embed/...
+    const match3 = url.match(/embed\/([\w-]{11})/);
+    if (match3) return match3[1];
+    // 4. 기타 (youtube.com/shorts/ 등)
+    const match4 = url.match(/youtube\.com\/(?:shorts|live)\/([\w-]{11})/);
+    if (match4) return match4[1];
+  } catch {}
+  return null;
+} 
