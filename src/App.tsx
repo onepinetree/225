@@ -18,6 +18,7 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [expandedSong, setExpandedSong] = useState<string | null>(null);
   const [editSong, setEditSong] = useState<Song | null>(null);
+  const [defaultLoading, setDefaultLoading] = useState(false);
 
   // 로그인 관련 핸들러
   const handleEmailSubmit = async (email: string, password: string, isSignUp: boolean) => {
@@ -51,8 +52,9 @@ function App() {
   };
 
   const handleAddDefaultSongs = async () => {
-    const result = await songs.addDefaultSongs();
-    // 조용히 처리 - UI 변화로 피드백 제공
+    setDefaultLoading(true);
+    await songs.addDefaultSongs();
+    setDefaultLoading(false);
   };
 
   const handleEditSong = async (id: string, updates: Partial<Song>) => {
@@ -201,10 +203,20 @@ function App() {
             <div className="mb-8">
               <button
                 onClick={handleAddDefaultSongs}
-                className="inline-flex items-center space-x-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-10 py-4 rounded-2xl hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 font-bold text-lg shadow-lg"
+                className="inline-flex items-center justify-center space-x-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-10 py-4 rounded-2xl hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 font-bold text-lg shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={defaultLoading}
               >
-                <Zap className="w-6 h-6" />
-                <span>기본곡으로 바로 시작</span>
+                {defaultLoading ? (
+                  <>
+                    <svg className="animate-spin mr-2" width="22" height="22" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4" fill="none" /><path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" /></svg>
+                    <span>기본곡 추가중...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-6 h-6" />
+                    <span>기본곡으로 바로 시작</span>
+                  </>
+                )}
               </button>
               <p className="text-sm text-gray-500 mt-3">ARMY, Legends Never Die 등 4곡이 추가됩니다</p>
             </div>
@@ -220,6 +232,7 @@ function App() {
             <button
               onClick={() => setShowAddSong(true)}
               className="inline-flex items-center space-x-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700 transition-all transform hover:scale-105 font-semibold"
+              disabled={defaultLoading}
             >
               <Plus className="w-5 h-5" />
               <span>내가 직접 추가하기</span>
@@ -228,7 +241,7 @@ function App() {
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-800">내 에너지 포인트</h2>
+              <h2 className="text-xl font-bold text-gray-800">PR치기 10초전 최고의 선택</h2>
               <button
                 onClick={() => setShowAddSong(true)}
                 className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105"
