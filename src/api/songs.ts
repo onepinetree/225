@@ -120,10 +120,11 @@ export const deleteSong = async (id: string): Promise<void> => {
 export const reorderSongs = async (songs: Song[]): Promise<void> => {
   try {
     // 각 곡의 order_index를 개별적으로 업데이트
+    // 내림차순 정렬을 위해 역순으로 인덱스 할당
     for (let i = 0; i < songs.length; i++) {
       const { error } = await supabase
         .from('songs')
-        .update({ order_index: i })
+        .update({ order_index: songs.length - 1 - i })  // 역순으로 할당
         .eq('id', songs[i].id);
       
       if (error) {
@@ -178,16 +179,12 @@ export const addDefaultSongsForNewUser = async (): Promise<Song[]> => {
 
   const createdSongs: Song[] = [];
   
-  // 순차적으로 기본곡 추가
-  for (let i = 0; i < defaultSongs.length; i++) {
+  // 역순으로 추가하여 화면에 원하는 순서로 표시되도록 함
+  for (let i = defaultSongs.length - 1; i >= 0; i--) {
     try {
-      const songData = {
-        ...defaultSongs[i],
-        order_index: i
-      };
-      const newSong = await createSong(songData);
+      const newSong = await createSong(defaultSongs[i]);
       if (newSong) {
-        createdSongs.push(newSong);
+        createdSongs.unshift(newSong);  // 배열 앞에 추가하여 원래 순서 유지
       }
     } catch (error) {
       console.error('Error creating default song:', error);
